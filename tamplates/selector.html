@@ -11,6 +11,68 @@
       padding:0px;
       font-family: Abel;
     }
+
+    .nav{
+  display:flex;
+
+
+}
+.nav .title{
+  font-family: Abel;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 39px;
+  line-height: 50px;
+  /* identical to box height */
+  color: #3F3D56;
+  text-shadow: 0 0 1px #0097FF, 0 0 1px #0097FF;
+  margin-top:20px;
+  margin-left:10px;
+  text-decoration:none;
+
+  flex:1;
+}
+
+ .goback{
+  flex:-1;
+  margin-top:-65px;
+  margin-left:90%;
+}
+
+ .goback form button{
+  font-family: Abel;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 38px;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  color: #3F77AA;
+  border: 2px solid blue;
+  text-decoration:none;
+  cursor: pointer;
+}
+
+.subt{
+  margin-left: 35%;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 25px;
+  line-height: 15px;
+}
+
+.subt a{
+    text-decoration:none;
+    color:blue;
+}
+
+ .subt a:hover{
+  text-shadow: 3px 3px 17px rgba(44, 40, 40, 0.11);
+    color:  #3F3D56;
+}
+
+
+
     .container img{
       position:absolute;
       margin:0px;
@@ -128,13 +190,25 @@
   <body>
     <div class="container">
       {% load static %}
+      <div class="nav">
+          <div class="title">
+            PyAnalysis
+          </div>
+        </div>
+      {% if user.is_authenticated %}
+      <div class="goback">
+            <form  action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+                <button type="submit" name="button">Logout</button>
+            </form>
+          </div>
       <img src="{% static 'assets/graph.svg' %}" alt="bg">
       <div class="heading">
           Py.Analysis
       </div>
 
       <div class="username">
-        {{welcome}}
+        {{user.username}}
       </div>
 
       <form class="file" action="{% url 'details'%}" method="post"  enctype="multipart/form-data">
@@ -142,10 +216,34 @@
           <label class="cfile" for="file_1">Analysis File
             <input  required accept=".csv" type="file" name="file_1">
           </label>
-          
+
           <input class="csubmit" type="submit" name="file_submit" value="Submit">
       </form>
+      {% else %}
+          <div class="login col-md-6">
+            <div class="heading">
+              PyAnalysis
+            </div>
 
+            </div>
+          <div class="subt">
+            You are logged out, to proceed ahead go to <a href="{% url 'login' %}">Login</a>
+          </div>
+        {% endif %}
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.6.8/lottie.min.js" integrity="sha256-HlqBFI4b3mzFNE97JQcgI/uhJvHBI5czBqfVtEeA1Hg=" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+        <script type="text/javascript">
+          var animation = bodymovin.loadAnimation({
+          container: document.getElementById('logout'), // Required
+          path: '{% static "data.json" %}', // Required
+          renderer: 'svg/canvas/html', // Required
+          loop: true, // Optional
+          autoplay: true, // Optional
+
+          })
+        </script>
 
 
     </div>

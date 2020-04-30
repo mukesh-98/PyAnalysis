@@ -100,7 +100,7 @@
 
     .graph{
       position: absolute;
-      top:500px;
+      top:550px;
       left:120px;
       right:10px;
 
@@ -208,6 +208,25 @@
       text-shadow: 0 0 3px #0097FF, 0 0 1px #0097FF;
     }
 
+     .goback{
+      flex:-1;
+      margin-top:5px;
+      margin-left:83%;
+    }
+
+     .goback form button{
+      font-family: Abel;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 30px;
+      line-height: 38px;
+      background-color: #FFFFFF;
+      border-radius: 8px;
+      color: #3F77AA;
+      border: 2px solid blue;
+      text-decoration:none;
+      cursor: pointer;
+    }
 
     </style>
   </head>
@@ -219,6 +238,12 @@
         <img src="{% static 'assets/search.svg' %}" alt="My image">
         <h4>{{app}}</h4>
       </div>
+      <div class="goback">
+            <form  action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+                <button type="submit" name="button">Logout</button>
+            </form>
+          </div>
       <div class="user">
         <img src="{% static 'assets/5-1.svg' %}" alt="My image">
         <h4>User&nbsp;Name&nbsp;:&nbsp;{{name}}</h4>

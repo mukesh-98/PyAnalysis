@@ -31,5 +31,6 @@ urlpatterns = [
     path('selector',selector.selector, name='selector'),
     path('details',details.details, name='details'),
     path('dashboard',dashboard.dashboard, name='dashboard'),
-    path('analysis',analysis.analysis, name='analysis')
+    path('analysis',analysis.analysis, name='analysis'),
+    path('', include("django.contrib.auth.urls"))
 ]

@@ -110,11 +110,35 @@
             text-shadow: 0 0 3px #0097FF, 0 0 1px #0097FF;
           }
 
+          .container .goback{
+           flex:-1;
+           margin-top:65px;
+           margin-left:83%;
+         }
 
+          .container .goback form button{
+           font-family: Abel;
+           font-style: normal;
+           font-weight: normal;
+           font-size: 30px;
+           line-height: 38px;
+           background-color: #FFFFFF;
+           border-radius: 8px;
+           color: #3F77AA;
+           border: 2px solid blue;
+           text-decoration:none;
+           cursor: pointer;
+         }
       </style>
 
       <body>
         <div class="container">
+          <div class="goback">
+                <form  action="{% url 'logout' %}" method="post">
+                  {% csrf_token %}
+                    <button type="submit" name="button">Logout</button>
+                </form>
+              </div>
           <div class="details">
             <div class="fname">
               <div class="head_f">
@@ -132,13 +156,14 @@
               </div>
               <div class="fdetails">
                 {% for i in data.columns %}
-          &nbsp;&nbsp;{{i}}&nbsp;&nbsp;
-        {% endfor %}
+                  &nbsp;&nbsp;{{i}}&nbsp;&nbsp;
+                {% endfor %}
               </div>
             </div>
         </div>
 
-          <form class="file" action="{% url 'dashboard'%}" method="get">
+          <form class="file" action="{% url 'dashboard'%}" method="post">
+            {% csrf_token%}
             <div class="drop">
               <label for="appname">Choose&nbsp;App&nbsp;:</label>
               <select class="appname" name="app">

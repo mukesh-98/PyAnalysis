@@ -180,12 +180,38 @@
 
         }
 
+         .goback{
+          flex:-1;
+          margin-top:25px;
+          margin-left:83%;
+        }
+
+         .goback form button{
+          font-family: Abel;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 30px;
+          line-height: 38px;
+          background-color: #FFFFFF;
+          border-radius: 8px;
+          color: #3F77AA;
+          border: 2px solid blue;
+          text-decoration:none;
+          cursor: pointer;
+        }
+
 
 </style>
 </head>
   <body>
 <div class="head">
   {% load static %}
+  <div class="goback">
+        <form  action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+            <button type="submit" name="button">Logout</button>
+        </form>
+      </div>
     <div class="pad">
       <img src="{% static 'assets/search.svg' %}" alt="My image">
       <h4>Marks Prediction</h4>
