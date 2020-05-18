@@ -17,6 +17,7 @@ from plotly.subplots import make_subplots
 
 def dashboard(request):
     try:
+        data1=pd.read_csv("./static/dataframe.csv")
         if request.POST['user']=='AllUser' and request.POST['app']=='AllApp':
             appname=request.POST['app']
             SomeStartdate=pd.to_datetime(request.POST['startdate']).date()
@@ -141,14 +142,14 @@ def dashboard(request):
             SomeUsername=request.POST['user']
             SomeStartdate=request.POST['startdate']
             SomeEnddate=request.POST['enddate']
-            modelcount=len(data1['model_name'].unique().tolist())
-            stepcount=len(data1['stepname'].unique().tolist())
-            usercount=len(data1['username'].unique().tolist())
-            avginc=sum(data1['Inclination'])/len(data1['Inclination'])
             SelectedDataUser = data1 #username slice
             SelectedDataApp = SelectedDataUser[SelectedDataUser['app_name'] == SomeAppname] #App slice
             DateMask = (SelectedDataApp['Date']>=SomeStartdate) & (SelectedDataApp['Date']<=SomeEnddate) #Date mask for start and end date
             SelectedDataFinalapp = SelectedDataApp.loc[DateMask] #data used in data analytics
+            modelcount=len(SelectedDataFinalapp['model_name'].unique().tolist())
+            stepcount=len(SelectedDataFinalapp['stepname'].unique().tolist())
+            usercount=len(SelectedDataFinalapp['username'].unique().tolist())
+            avginc=sum(SelectedDataFinalapp['Inclination'])/len(SelectedDataFinalapp['Inclination'])
             #Access Date of User
             access_date=[]
             access_date_counts=[]
@@ -259,11 +260,17 @@ def dashboard(request):
                 month_usage.append(len(usage_month['month'].value_counts()))
             plt.Scatterplot(model_month,month_usage,"Number of Month the App was Accessed")
 
-            plt.plot3d(data1['username'],data1['model_name'],data1['timestamp'],"User name Vs Model_name Vs TimeStamp")
-            plt.plot3d(data1['username'],data1['model_name'],data1['Inclination'],"User name Vs Model name Vs Inclination")
-            plt.plot3d(data1['username'],data1['model_name'],data1['stepname'],"User name Vs Model name Vs Step name")
-            plt.plot3d(data1['model_name'],data1['timestamp'],data1['Inclination'],"Model name Vs TimeStamp Vs Inclination")
-            return render(request,'dashboard.html',{'app':SomeAppname,'name':SomeUsername,'counts':usercount,'model':modelcount,'step':stepcount,'avginc':str(avginc)[:6],'alluser':True})
+            plt.plot3d(SelectedDataFinalapp['username'],SelectedDataFinalapp['model_name'],SelectedDataFinalapp['timestamp'],"User name Vs Model_name Vs TimeStamp")
+            plt.plot3d(SelectedDataFinalapp['username'],SelectedDataFinalapp['model_name'],SelectedDataFinalapp['Inclination'],"User name Vs Model name Vs Inclination")
+            plt.plot3d(SelectedDataFinalapp['username'],SelectedDataFinalapp['model_name'],SelectedDataFinalapp['stepname'],"User name Vs Model name Vs Step name")
+            plt.plot3d(SelectedDataFinalapp['model_name'],SelectedDataFinalapp['timestamp'],SelectedDataFinalapp['Inclination'],"Model name Vs TimeStamp Vs Inclination")
+            return render(request,'dashboard.html',{'app':SomeAppname,'name':"All User",'counts':usercount,'model':modelcount,'step':stepcount,'avginc':str(avginc)[:6],'alluser':True})
+
+        elif request.POST['user'] !='AllUser' and request.POST['app']=='AllApp' or pd.to_datetime(request.POST['enddate']) <  pd.to_datetime(min(data1['Date'])) :
+            return render(request,'dashboard.html',{'app':request.POST['app'],'name':request.POST['user'],'counts':0,'model':0,'step':0,'avginc':0,'alluser':False,'allapp':True})
+
+        elif  pd.to_datetime(request.POST['enddate']) <  pd.to_datetime(min(data1['Date'])) :
+            return render(request,'dashboard.html',{'app':request.POST['app'],'name':request.POST['user'],'counts':0,'model':0,'step':0,'avginc':0,'alluser':False,'allapp':True})
 
         else:
             data1=pd.read_csv("./static/dataframe.csv")
@@ -271,17 +278,17 @@ def dashboard(request):
             SomeUsername=request.POST['user']
             SomeStartdate=request.POST['startdate']
             SomeEnddate=request.POST['enddate']
-            modelcount=len(data1['model_name'].unique().tolist())
-            stepcount=len(data1['stepname'].unique().tolist())
-            usercount=len(data1['username'].unique().tolist())
-            avginc=sum(data1['Inclination'])/len(data1['Inclination'])
+
 
             SelectedDataUser = data1[data1['username'] == SomeUsername] #username slice
             SelectedDataApp = SelectedDataUser[SelectedDataUser['app_name'] == SomeAppname] #App slice
             DateMask = (SelectedDataApp['Date']>=SomeStartdate) & (SelectedDataApp['Date']<=SomeEnddate) #Date mask for start and end date
             SelectedDataFinal = SelectedDataApp.loc[DateMask] #data used in data analytics
 
-
+            modelcount=len(SelectedDataFinal['model_name'].unique().tolist())
+            stepcount=len(SelectedDataFinal['stepname'].unique().tolist())
+            usercount=len(SelectedDataFinal['username'].unique().tolist())
+            avginc=sum(SelectedDataFinal['Inclination'])/len(SelectedDataFinal['Inclination'])
 
             #Access Date of User
             access_date=[]
@@ -394,11 +401,11 @@ def dashboard(request):
                 month_usage.append(len(usage_month['month'].value_counts()))
             plt.Scatterplot(model_month,month_usage,"Number of Month the App was Accessed")
 
-            plt.plot3d(data1['stepname'],data1['model_name'],data1['timestamp'],"Step name Vs Model_name Vs TimeStamp")
-            plt.plot3d(data1['stepname'],data1['model_name'],data1['Inclination'],"Step name Vs Model name Vs Inclination")
-            plt.plot3d(data1['year'],data1['model_name'],data1['stepname'],"Year Vs Model name Vs Step name")
-            plt.plot3d(data1['model_name'],data1['timestamp'],data1['Inclination'],"Model name Vs TimeStamp Vs Inclination")
+            plt.plot3d(SelectedDataFinal['stepname'],SelectedDataFinal['model_name'],SelectedDataFinal['timestamp'],"Step name Vs Model_name Vs TimeStamp")
+            plt.plot3d(SelectedDataFinal['stepname'],SelectedDataFinal['model_name'],SelectedDataFinal['Inclination'],"Step name Vs Model name Vs Inclination")
+            plt.plot3d(SelectedDataFinal['year'],SelectedDataFinal['model_name'],SelectedDataFinal['stepname'],"Year Vs Model name Vs Step name")
+            plt.plot3d(SelectedDataFinal['model_name'],SelectedDataFinal['timestamp'],SelectedDataFinal['Inclination'],"Model name Vs TimeStamp Vs Inclination")
 
             return render(request,'dashboard.html',{'app':SomeAppname,'name':SomeUsername,'counts':usercount,'model':modelcount,'step':stepcount,'avginc':str(avginc)[:6],'alluser':False})
     except:
-        return render(request,'home.html')
+        return render(request,'dashboard.html')

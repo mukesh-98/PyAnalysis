@@ -44,12 +44,13 @@ def analysis(request):
 
 
 
-        data2 = pd.read_csv("."+url2)
-        x=pd.read_csv("./analysis/oneAppData.csv")
-        scoreSampleFile =pd.read_csv("."+url3)
-        y=pd.read_csv("./analysis/scoreSampleFile.csv")
 
         try:
+            data2 = pd.read_csv("."+url2)
+            x=pd.read_csv("./analysis/oneAppData.csv")
+            scoreSampleFile =pd.read_csv("."+url3)
+            y=pd.read_csv("./analysis/scoreSampleFile.csv")
+
             data2=data2.drop(["accelerometer_x","accelerometer_x","accelerometer_y","accelerometer_z","lon","lat"],axis=1)
             data2=data2.dropna()
 
@@ -182,8 +183,8 @@ def analysis(request):
                 TimeFinalCount.append(int(avgModelTimeValue[totalmodelname1]/timeModel[totalmodelname1]))
             plt.graphplot(clickModelList,clickFinalCount,"Clicks Clustering")
             plt.graphplot(TimeModelList,TimeFinalCount,"Time Clustering")
-            return render(request,'analysis.html',{'y':marks[0][0]})
+            return render(request,'analysis.html',{'y':int(marks[0][0])})
         except KeyError:
             return render(request,'analysis.html',{'y':"You Selected Wrong File"})
     except :
-        return render(request,'home.html')
+        return render(request,'dashboard.html')
