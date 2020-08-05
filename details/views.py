@@ -12,32 +12,27 @@ import math
 # Create your views here.
 
 def details(request):
-    try:
-        if request.method== 'POST':
-            NoApp=["NoApp"]
-            NoUser=["NoUser"]
-            data1=pd.DataFrame()
-            file1 = request.FILES['file_1']
-            if file1 != '':
-                fs1=FileSystemStorage()
-                name1=fs1.save(file1.name,file1)
-                url1=fs1.url(name1)
-                data1=pd.read_csv("."+url1)
-                data1.reset_index(drop=True,inplace=True)
-                forcol=pd.read_csv("./analysis/Tracking-2020-02-22.csv")
-                if data1.columns.tolist() == forcol.columns.tolist():
-                    data1=work(data1)
-                    fs1.save(data1.to_csv('./static/dataframe.csv', index = False),file1)
-                    applist=data1['app_name'].unique().tolist()
-                    userlist=data1['username'].unique().tolist()
-                    return render(request,'details.html',{'file':str(file1),'data':data1,'app':applist,'user':userlist})
-                else:
-                    return render(request,'details.html',{'file':str("Invalid File"),'data':data1,'app':NoApp,'user':NoUser})
+    if request.method== 'POST':
+        NoApp=["NoApp"]
+        NoUser=["NoUser"]
+        data1=pd.DataFrame()
+        file1 = request.FILES['file_1']
+        if file1 != '':
+            fs1=FileSystemStorage()
+            name1=fs1.save(file1.name,file1)
+            url1=fs1.url(name1)
+            data1=pd.read_csv("."+url1)
+            data1.reset_index(drop=True,inplace=True)
+            forcol=pd.read_csv("./analysis/Tracking-2020-02-22.csv")
+            if data1.columns.tolist() == forcol.columns.tolist():
+                data1=work(data1)
+                data1.to_csv('./static/dataframe.csv')
+                applist=data1['app_name'].unique().tolist()
+                userlist=data1['username'].unique().tolist()
+                return render(request,'details.html',{'file':str(file1),'data':data1,'app':applist,'user':userlist})
+            else:
+                return render(request,'details.html',{'file':str("Invalid File"),'data':data1,'app':NoApp,'user':NoUser})
 
-    except ValueError:
-        return render(request,'home.html')
-    except :
-        return render(request,'home.html')
 
         
 def work(data):
